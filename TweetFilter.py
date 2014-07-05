@@ -18,12 +18,12 @@ USER_REGEX = re.compile(USER_STR)
 HASHTAG_STR = ur'[^\w&]'+HASH_SIGNS+ur'([\w]+\b)'
 HASHTAG_REGEX = re.compile(HASHTAG_STR, re.UNICODE)
 
-URL_REGEX = re.compile(ur'(http://[^s]*)')
+URL_REGEX = re.compile(ur'(https?://[A-Za-z0-9~;/?:@=&$-_.+!*\'(),%]*)')
 
-RETWEET_REGEX = re.compile(ur'(RT '+USER_STR+ur'.*$)')
+RETWEET_REGEX = re.compile(ur'(RT\s?@([a-zA-Z0-9_]{1,15}).*$)')
 FORWARD_REGEX = re.compile(ur'\u0022'+USER_STR+ur'.*\u0022|“'+USER_STR+ur'.*”')
 
-TAGS_AUTO_LIST = ('ifttt',)
+TAGS_AUTO_LIST = ('ifttt','Tweet4China')
 
 class TweetContent:
     
@@ -46,7 +46,7 @@ class TweetContent:
         self.rtflag = False
     
     def isvalid(self):
-        return self.content == ""
+        return self.content == u""
     
     def isrewteet(self):
         return self.rtflag
@@ -90,7 +90,7 @@ class TweetFilter:
             except ValueError:
                 continue
             
-        if content = u"":
+        if content == u"":
             return TweetContent(content,mentions,hashlst,rtflag)
 
         content = content.replace(u'#',u' ')
