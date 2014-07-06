@@ -7,7 +7,7 @@ Created on Sat Jul 05 16:01:14 2014
 
 """
 
-from TwitterFilter import TwitterFilter
+from TweetFilter import TweetFilter
 from key import *
 import codecs
 import tweepy
@@ -16,7 +16,7 @@ auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 api = tweepy.API(auth)
 
-tfilter = TwitterFilter()
+tfilter = TweetFilter()
 
 availablelist = [u'class1',u'class2',u'class3']
 
@@ -28,7 +28,7 @@ def gettweetlist(listowner, listname):
         for itm in tl:
             content = tfilter.parse(itm.text)
             if content.content!=u"":
-                tweetlst.append(content.content)
+                tweetlst.append(content.content.strip())
         if len(tweetlst)!=0:
             tweettable[mem.screen_name]=tweetlst
     return tweettable
@@ -38,8 +38,10 @@ def gettweetpool():
     fw = utf8_writer(open('data/train','w'))
     for itm in availablelist:
         table = gettweetlist(u'wattlebird_01',itm)
-        for tweet in table.values():
-            fw.write(tweet+u'\n')
+        for tweets in table.values():
+            for tweet in tweets:
+                if tweet!=u"":
+                    fw.write(tweet+u'\n')
     fw.close()
     
 def gettweetuser(uid):

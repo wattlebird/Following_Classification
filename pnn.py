@@ -13,6 +13,7 @@ import pickle
 import os
 import re
 
+
 class pnn:
     def __init__(self):
         self.featuretable = {}
@@ -20,15 +21,31 @@ class pnn:
         if os.path.exists('data/dict.dat'):
             fd = open('data/dict.dat','rb')
             self.featuretable = pickle.load(fd)
+            fd.close()
+        if os.path.exists('data/para.dat'):
+            fd = open('data/para.dat','rb')
+            self.m_feature_to_mode = pickle.load(fd)
+            self.m_mode_to_class = pickle.load(fd)
+            
+    def __del__(self):
+        if len(self.featuretable)!=0:
+            fw = open('data/dict.dat','wb')
+            pickle.dump(self.featuretable,fw)
+            fw.close()
+        if hasattr(self, 'm_feature_to_mode') and hasattr(self,'m_mode_to_class'):
+            fw = open('data/para.dat','wb')
+            pickle.dump(self.m_feature_to_mode,fw)
+            pickle.dump(self.m_mode_to_class,fw)
+            fw.close()
         
     def trainsample(self):
-        table = gettweets.gettweetlist('wattlebird_01','class1')
+        table = gettweets.gettweetlist(u'wattlebird_01',u'class1')
         for v in table.values():
             self._add_sample(v,0)
-        table = gettweets.gettweetlist('wattlebird_01','class2')
+        table = gettweets.gettweetlist(u'wattlebird_01',u'class2')
         for v in table.values():
             self._add_sample(v,1)
-        table = gettweets.gettweetlist('wattlebird_01','class3')
+        table = gettweets.gettweetlist(u'wattlebird_01',u'class3')
         for v in table.values():
             self._add_sample(v,2)
     
@@ -61,9 +78,6 @@ class pnn:
                     continue
                 else:
                     self.featuretable[wd]=len(self.featuretable)+1
-        fd = open('data/dict.dat','wb')
-        pickle.dump(self.featuretable,fd)
-        fd.close()
         
     def _tweet_to_feature(self, tweetlist):
         f = numpy.zeros(len(self.featuretable),dtype=numpy.float64)
@@ -80,7 +94,7 @@ class pnn:
         f = self._tweet_to_feature(tweetlist)
         f.shape = 1,f.shape[0]
         if hasattr(self, 'm_feature_to_mode'):
-            self.m_feature_to_mode = numpy.concatenate((self.m_feature_to_mode, f))
+            self.m_feature_to_mode = numpy.vstack((self.m_feature_to_mode, f))
         else:
             self.m_feature_to_mode = f
         
@@ -90,12 +104,12 @@ class pnn:
             self.m_mode_to_class = self._class_vec(nclass)
             
             
-    def _class_vec(nclass):
+    def _class_vec(self,nclass):
         if nclass == 0:
-            return numpy.array([1,0,0])
+            return numpy.array([[1,0,0]])
         elif nclass == 1:
-            return numpy.array([0,1,0])
+            return numpy.array([[0,1,0]])
         elif nclass == 2:
-            return numpy.array([0,0,1])
+            return numpy.array([[0,0,1]])
         else:
             return None
