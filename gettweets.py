@@ -30,7 +30,7 @@ def gettweetlist(listowner, listname):
             if content.content!=u"":
                 tweetlst.append(content.content)
         if len(tweetlst)!=0:
-            tweettable[mem.id]=tweetlst
+            tweettable[mem.screen_name]=tweetlst
     return tweettable
     
 def gettweetpool():
