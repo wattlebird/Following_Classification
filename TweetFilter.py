@@ -23,7 +23,7 @@ URL_REGEX = re.compile(ur'(https?://[A-Za-z0-9~;/?:@=&$-_.+!*\'(),%]*)')
 RETWEET_REGEX = re.compile(ur'(RT\s?@([a-zA-Z0-9_]{1,15}).*$)')
 FORWARD_REGEX = re.compile(ur'\u0022'+USER_STR+ur'.*\u0022|“'+USER_STR+ur'.*”')
 
-TAGS_AUTO_LIST = ('ifttt','Tweet4China')
+TAGS_AUTO_LIST = ('ifttt','Tweet4China','asbot')
 
 class TweetContent:
     

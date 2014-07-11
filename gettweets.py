@@ -27,8 +27,9 @@ def gettweetlist(listowner, listname):
         tweetlst = []
         for itm in tl:
             content = tfilter.parse(itm.text)
-            if content.content!=u"":
-                tweetlst.append(content.content.strip())
+            s=content.content.strip()
+            if s!=u"":
+                tweetlst.append(s)
         if len(tweetlst)!=0:
             tweettable[mem.screen_name]=tweetlst
     return tweettable
@@ -50,8 +51,9 @@ def gettweetuser(uid):
     tweetlst = []
     for itm in tl:
         content = tfilter.parse(itm.text)
-        if content.content!=u"":
-            tweetlst.append(content.content)
+        s= content.content.strip()
+        if s!=u"":
+            tweetlst.append(s)
     if len(tweetlst)!=0:
         return tweetlst
     else:
