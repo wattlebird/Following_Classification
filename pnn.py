@@ -16,8 +16,7 @@ import re
 
 class pnn:
     def __init__(self):
-        self.featuretable = {}
-        self.sigma = 0.3
+        self.sigma = 0.03
         if os.path.exists('data/dict.dat'):
             fd = open('data/dict.dat','rb')
             self.featuretable = pickle.load(fd)
@@ -28,7 +27,7 @@ class pnn:
             self.m_mode_to_class = pickle.load(fd)
             
     def __del__(self):
-        if len(self.featuretable)!=0:
+        if hasattr(self, 'featuretable'):
             fw = open('data/dict.dat','wb')
             pickle.dump(self.featuretable,fw)
             fw.close()
@@ -58,6 +57,7 @@ class pnn:
         return numpy.argmax(h)
     
     def trainfeature(self, filepath):
+        featuretable = {}
         (utf8_encoder, utf8_decoder, utf8_reader, utf8_writer) = codecs.lookup('utf-8')
         fd = utf8_reader(open(filepath))
         tweetlist = fd.readlines()
@@ -74,10 +74,12 @@ class pnn:
                     continue
                 else:
                     wd = mtch.group(0)
-                if self.featuretable.has_key(wd):
+                if featuretable.has_key(wd):
                     continue
                 else:
-                    self.featuretable[wd]=len(self.featuretable)+1
+                    featuretable[wd]=len(featuretable)+1
+        if len(featuretable):
+            self.featuretable = featuretable
         
     def _tweet_to_feature(self, tweetlist):
         f = numpy.zeros(len(self.featuretable),dtype=numpy.float64)

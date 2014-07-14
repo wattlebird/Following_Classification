@@ -19,6 +19,6 @@ fw = utf8_writer(open('data/classify_result','w'))
 model = pnn()
 
 for itm in tweetinfo:
-    fw.write(u'%s\t%s\t%d\n'%(itm[0],itm[1],model.classify(itm[3])))
+    fw.write(u'%s\t%s\t%d\n'%(itm[0],itm[1],model.classify(itm[2])))
 
 fw.close()
